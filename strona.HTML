@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Powietrze w Toruniu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #111111;
+    --status: #1F7A35;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 24px;
+  }
+  main {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .place {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .cloud-wrap { width: min(280px, 80vw); margin: 32px 0 8px; }
+  .cloud-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .float { animation: float 6s ease-in-out infinite; transform-origin: center; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  #cloudBody, #face path, #face circle { transition: fill 0.6s ease, fill-opacity 0.6s ease, stroke 0.6s ease, d 0.6s ease; }
+  .label { font-size: 1rem; font-weight: 600; margin: 12px 0 0; }
+  .status {
+    font-size: clamp(2.4rem, 11vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.05;
+    margin: 4px 0 12px;
+    color: var(--status);
+    transition: color 0.6s ease;
+  }
+  .advice { font-size: 1.15rem; line-height: 1.45; margin: 0 0 8px; max-width: 30ch; }
+  .meta { font-size: 0.9rem; margin: 0 0 28px; }
+  .more {
+    color: var(--ink);
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    padding: 8px 4px;
+  }
+  .more:focus-visible, .pill:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 6px; }
+  .stations { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 4px 0 0; }
+  .stations .pill { font-size: 0.85rem; padding: 7px 12px; min-height: 36px; }
+  footer { margin-top: auto; padding-top: 40px; font-size: 0.8rem; line-height: 1.5; }
+  .pill {
+    font: inherit; font-size: 0.8rem;
+    background: #fff; color: var(--ink);
+    border: 1.5px solid var(--ink); border-radius: 999px;
+    padding: 6px 10px; cursor: pointer; min-height: 32px;
+  }
+  .pill[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  @media (prefers-reduced-motion: reduce) {
+    .float { animation: none; }
+    #cloudBody, #face path, #face circle, .status { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="place">Powietrze w Toruniu</p>
+  <div class="stations" id="stationBtns" role="group" aria-label="Wybierz stację pomiarową"></div>
+
+  <div class="cloud-wrap">
+    <svg viewBox="20 14 194 124" role="img" id="cloudSvg" aria-labelledby="cloudTitle">
+      <title id="cloudTitle">Chmurka</title>
+      <g class="float">
+        <path id="cloudBody"
+          d="M 62 132 A 36 36 0 0 1 58 60 A 48 48 0 0 1 148 44 A 38 38 0 0 1 196 84 A 26 26 0 0 1 188 132 Z"
+          fill="#52525B" fill-opacity="0.03" stroke="#111111" stroke-width="3" stroke-linejoin="round"/>
+        <g id="face" stroke-linecap="round" fill="none"></g>
+      </g>
+    </svg>
+  </div>
+
+  <p class="label">Stan powietrza</p>
+  <p class="status" id="status" aria-live="polite">Bardzo dobre</p>
+  <p class="advice" id="advice"></p>
+  <p class="meta" id="meta"></p>
+
+  <a class="more" href="#">Zobacz stan powietrza z ostatnich 30 dni →</a>
+
+
+  <footer>
+    Źródło danych: Główny Inspektorat Ochrony Środowiska (GIOŚ).<br>
+    Dane bieżące nie są weryfikowane i mogą się zmienić.
+  </footer>
+</main>
+
+<script>
+  // Poziomy zgodne z polskim indeksem jakości powietrza GIOŚ (0 = bardzo dobry ... 5 = bardzo zły)
+  const LEVELS = [
+    { name: "Bardzo dobre", color: "#1F7A35", fill: "#52525B", op: 0.03, face: "#111111", mood: 1.0,
+      advice: "Idealny dzień na spacer i trening na zewnątrz." },
+    { name: "Dobre",        color: "#4A7A0A", fill: "#52525B", op: 0.12, face: "#111111", mood: 0.6,
+      advice: "Dobry moment, żeby wyjść na zewnątrz." },
+    { name: "Umiarkowane",  color: "#8A6A00", fill: "#52525B", op: 0.25, face: "#111111", mood: 0.15,
+      advice: "Można wyjść, ale osoby wrażliwe powinny uważać." },
+    { name: "Dostateczne",  color: "#B04800", fill: "#4B4B52", op: 0.42, face: "#111111", mood: -0.3,
+      advice: "Ogranicz długi wysiłek na zewnątrz." },
+    { name: "Złe",          color: "#C01818", fill: "#4B4B52", op: 0.65, face: "#111111", mood: -0.7,
+      advice: "Lepiej przenieś trening do środka." },
+    { name: "Bardzo złe",   color: "#7A0A0A", fill: "#3F3F46", op: 0.85, face: "#111111", mood: -1.0,
+      advice: "Zostań w domu i zamknij okna, jeśli możesz." }
+  ];
+
+  // Gdy data/now.json nie jest dostępny, pokazujemy stacje ze stanem "Brak danych"
+  const FALLBACK = {
+    station_id: 145,
+    stations: [
+      { station_id: 145, station: "Toruń, ul. Wały gen. Sikorskiego", level: null, measured_at: null },
+      { station_id: 206, station: "Toruń, ul. Dziewulskiego",         level: null, measured_at: null },
+      { station_id: 208, station: "Toruń, ul. Przy Kaszowniku",       level: null, measured_at: null }
+    ]
+  };
+
+  const $ = (id) => document.getElementById(id);
+
+  function drawFace(lv) {
+    const L = LEVELS[lv];
+    const face = $("face");
+    const c = L.face;
+    // usta: krzywa Beziera, punkt kontrolny w górę/dół zależnie od nastroju
+    const baseY = 112 - L.mood * 2;
+    const ctrlY = baseY + L.mood * 16;
+    const mouth = `<path d="M 110 ${baseY} Q 127 ${ctrlY} 144 ${baseY}" stroke="${c}" stroke-width="4"/>`;
+    let eyes;
+    if (lv === 0) {
+      // zmrużone, szczęśliwe oczy
+      eyes = `<path d="M 104 92 Q 110 85 116 92" stroke="${c}" stroke-width="3.5"/>
+              <path d="M 138 92 Q 144 85 150 92" stroke="${c}" stroke-width="3.5"/>`;
+    } else {
+      eyes = `<circle cx="110" cy="91" r="4.5" fill="${c}" stroke="none"/>
+              <circle cx="144" cy="91" r="4.5" fill="${c}" stroke="none"/>`;
+    }
+    face.innerHTML = eyes + mouth;
+  }
+
+  function formatTime(iso) {
+    const d = new Date(iso);
+    if (isNaN(d)) return "";
+    return d.toLocaleString("pl-PL", { hour: "2-digit", minute: "2-digit", day: "numeric", month: "long" });
+  }
+
+  function renderNoData(st) {
+    const body = $("cloudBody");
+    body.setAttribute("fill", "#52525B");
+    body.setAttribute("fill-opacity", 0);
+    body.setAttribute("stroke", "#111111");
+    $("face").innerHTML =
+      `<circle cx="110" cy="91" r="4.5" fill="#111111" stroke="none"/>
+       <circle cx="144" cy="91" r="4.5" fill="#111111" stroke="none"/>
+       <path d="M 112 112 L 142 112" stroke="#111111" stroke-width="4"/>`;
+    $("cloudTitle").textContent = "Chmurka: brak danych";
+    $("status").textContent = "Brak danych";
+    document.documentElement.style.setProperty("--status", "#111111");
+    $("advice").textContent = "Ta stacja chwilowo nie przesyła pomiarów. Wybierz inną.";
+    $("meta").textContent = "";
+  }
+
+  function render(lv, data) {
+    lv = Math.max(0, Math.min(5, Number(lv) || 0));
+    const L = LEVELS[lv];
+    const body = $("cloudBody");
+    body.setAttribute("fill", L.fill);
+    body.setAttribute("fill-opacity", L.op);
+    body.setAttribute("stroke", lv >= 4 ? L.fill : "#111111");
+    drawFace(lv);
+    $("cloudTitle").textContent = `Chmurka: powietrze ${L.name.toLowerCase()}`;
+    $("status").textContent = L.name;
+    document.documentElement.style.setProperty("--status", L.color);
+    $("advice").textContent = L.advice;
+    const t = data && data.measured_at ? formatTime(data.measured_at) : "";
+    $("meta").textContent = t ? `Pomiar: ${t}` : "";
+  }
+
+  // ---- wybór stacji ----
+  let DATA = FALLBACK;
+  let selectedId = null;
+
+  function shortName(name) { return name.replace(/^Toruń,\s*/, "").replace(/^ul\.\s*/, ""); }
+
+  function currentStation() {
+    return DATA.stations.find(s => s.station_id === selectedId) || DATA.stations[0];
+  }
+
+  function showSelected() {
+    const st = currentStation();
+    document.querySelectorAll("#stationBtns .pill").forEach(b =>
+      b.setAttribute("aria-pressed", String(Number(b.dataset.id) === st.station_id)));
+    if (st.level === null || st.level === undefined) renderNoData(st);
+    else render(st.level, st);
+  }
+
+  function buildStations() {
+    const box = $("stationBtns");
+    box.innerHTML = "";
+    DATA.stations.forEach(st => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "pill";
+      b.dataset.id = st.station_id;
+      b.textContent = shortName(st.station);
+      b.addEventListener("click", () => {
+        selectedId = st.station_id;
+        try { localStorage.setItem("stacja", String(selectedId)); } catch (e) {}
+        showSelected();
+      });
+      box.appendChild(b);
+    });
+    // domyślnie: ostatnio wybrana stacja, a jeśli brak – ta z pliku (najgorsza)
+    let saved = null;
+    try { saved = Number(localStorage.getItem("stacja")); } catch (e) {}
+    selectedId = DATA.stations.some(s => s.station_id === saved) ? saved : DATA.station_id;
+    showSelected();
+  }
+
+
+  // dane: data/now.json z GitHub Actions, a gdy go brak – dane przykładowe
+  fetch("data/now.json", { cache: "no-store" })
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(d => { if (d.stations && d.stations.length) DATA = d; })
+    .catch(() => {})
+    .finally(buildStations);
+</script>
+</body>
+</html>
