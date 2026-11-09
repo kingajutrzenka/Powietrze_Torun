@@ -1,11 +1,3 @@
-"""
-Pobiera bieżący indeks jakości powietrza GIOŚ dla stacji w Toruniu
-i zapisuje go do data/now.json, który czyta strona (index.html).
-
-Źródło danych: Główny Inspektorat Ochrony Środowiska (GIOŚ),
-API: https://api.gios.gov.pl/pjp-api/v1/rest
-"""
-
 import json
 import sys
 from datetime import datetime
@@ -14,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-BASE = "https://api.gios.gov.pl/pjp-api/v1/rest"
+BASE = "https://api.gios.gov.pl/pjp-api/v1/rest" #api
 TZ = ZoneInfo("Europe/Warsaw")
 OUT = Path("data/now.json")
 
@@ -26,8 +18,6 @@ STACJE = {
 
 
 def pole(slownik, poczatek):
-    """Zwraca wartość pierwszego klucza zaczynającego się od `poczatek`.
-    GIOŚ ma długie, czasem ucięte nazwy kluczy, więc nie polegamy na pełnej nazwie."""
     for k, v in slownik.items():
         if k.startswith(poczatek):
             return v
@@ -40,7 +30,7 @@ def indeks_stacji(sid):
     aq = r.json()["AqIndex"]
     wartosc = aq.get("Wartość indeksu")
     if wartosc is None or not (0 <= int(wartosc) <= 5):
-        wartosc = None  # brak indeksu (np. awaria stacji) – strona pokaże "Brak danych"
+        wartosc = None 
     czas = pole(aq, "Data danych źródłowych, z których policzono wartość indeksu dla wskaźnika st")
     if czas:
         czas = datetime.strptime(czas, "%Y-%m-%d %H:%M:%S").replace(tzinfo=TZ).isoformat()
@@ -65,11 +55,9 @@ def main():
 
     poprawne = [w for w in wyniki if w["level"] is not None]
     if not poprawne:
-        # nie nadpisujemy poprzedniego pliku pustymi danymi
         print("Brak danych z żadnej stacji – zostawiam poprzedni now.json", file=sys.stderr)
         sys.exit(1)
-
-    # domyślny widok na stronie: najgorsza stacja (użytkownik może wybrać inną)
+        
     glowny = max(poprawne, key=lambda w: w["level"])
 
     dane = {
