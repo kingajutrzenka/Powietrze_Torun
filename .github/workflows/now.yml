@@ -2,19 +2,19 @@ name: Aktualizacja jakości powietrza
 
 on:
   schedule:
-    - cron: "20 * * * *"   # co godzinę o :20 (UTC) – GIOŚ liczy indeks ok. kwadrans po pełnej godzinie
-  workflow_dispatch:        # ręczne uruchomienie z zakładki Actions
+    - cron: "20 * * * *"   
+  workflow_dispatch:        
     inputs:
       backfill:
         description: "Pobierz archiwum z ostatnich 35 dni (raz, trwa ok. 10 min)"
         type: boolean
         default: false
   push:
-    branches: [main]        # po każdej Twojej zmianie (np. w index.html) strona też się odświeża
+    branches: [main]       
 
 permissions:
-  contents: write   # zapis data/now.json do repo
-  pages: write      # wdrożenie strony
+  contents: write   
+  pages: write      
   id-token: write
 
 concurrency:
@@ -38,7 +38,6 @@ jobs:
         run: pip install requests pandas
 
       - name: Pobranie indeksu
-        # gdy GIOŚ nie odpowie, strona i tak się wdroży z poprzednimi danymi
         continue-on-error: true
         run: python fetch_now.py
 
