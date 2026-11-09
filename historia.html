@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Powietrze w Toruniu – 30 dni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #ffffff; --ink: #111111; --good: #1F7A35; --bad: #C01818; --muted: #6B6B6B; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+    min-height: 100vh; display: flex; justify-content: center; padding: 32px 16px 24px;
+  }
+  main { width: 100%; max-width: 520px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .back {
+    align-self: flex-start; color: var(--ink); font-weight: 600; font-size: 0.95rem;
+    text-decoration: underline; text-underline-offset: 4px; padding: 4px 2px; margin-bottom: 16px;
+  }
+  .place { font-size: 0.95rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin: 0 0 8px; }
+  .stations { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 4px 0 24px; }
+  .pill {
+    font: inherit; font-size: 0.85rem; background: #fff; color: var(--ink);
+    border: 1.5px solid var(--ink); border-radius: 999px; padding: 7px 12px; min-height: 36px; cursor: pointer;
+  }
+  .pill[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .pill:focus-visible, .back:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 6px; }
+  h1 { font-size: 1.5rem; font-weight: 800; margin: 0 0 4px; }
+  .sub { font-size: 0.95rem; margin: 0 0 20px; }
+  .big { font-size: clamp(2.6rem, 12vw, 3.4rem); font-weight: 800; line-height: 1; margin: 0; }
+  .big.good { color: var(--good); }
+  .big.bad { color: var(--bad); }
+  .bigLabel { font-size: 1.05rem; margin: 6px 0 4px; max-width: 32ch; line-height: 1.4; }
+  .worst { font-size: 0.95rem; margin: 0 0 24px; }
+  .chart { width: 100%; }
+  .chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart rect.bar { cursor: pointer; }
+  .chart rect.bar:focus { outline: none; }
+  .chart rect.bar:focus-visible { stroke: var(--ink); stroke-width: 2; }
+  .detail { min-height: 1.5em; font-size: 1rem; font-weight: 600; margin: 12px 0 0; }
+  .legend { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; font-size: 0.85rem; margin: 12px 0 0; }
+  .legend span::before {
+    content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 3px;
+    margin-right: 6px; vertical-align: -1px; background: var(--c);
+  }
+  .note { font-size: 0.85rem; line-height: 1.5; margin: 20px 0 0; max-width: 42ch; }
+  footer { margin-top: auto; padding-top: 40px; font-size: 0.8rem; line-height: 1.5; }
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="./">← Teraz</a>
+  <p class="place">Powietrze w Toruniu</p>
+  <div class="stations" id="stationBtns" role="group" aria-label="Wybierz stację pomiarową"></div>
+
+  <h1>Ostatnie 30 dni</h1>
+  <p class="sub">Pył PM10 – średnia z każdej doby</p>
+
+  <p class="big" id="big">–</p>
+  <p class="bigLabel" id="bigLabel"></p>
+  <p class="worst" id="worst"></p>
+
+  <div class="chart" id="chart"></div>
+  <p class="detail" id="detail" aria-live="polite">Dotknij słupka, żeby zobaczyć dzień.</p>
+  <div class="legend">
+    <span style="--c: var(--good)">w normie</span>
+    <span style="--c: var(--bad)">powyżej normy</span>
+  </div>
+
+  <p class="note">
+    Norma dobowa dla pyłu PM10 to 50 µg/m³. Średnią liczymy tylko z dni,
+    w których stacja przesłała co najmniej 18 z 24 pomiarów godzinowych.
+  </p>
+
+  <footer>
+    Źródło danych: Główny Inspektorat Ochrony Środowiska (GIOŚ).<br>
+    Dane bieżące nie są weryfikowane i mogą się zmienić.
+  </footer>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const STATIONS = [
+    { station_id: 145, station: "Toruń, ul. Wały gen. Sikorskiego" },
+    { station_id: 206, station: "Toruń, ul. Dziewulskiego" },
+    { station_id: 208, station: "Toruń, ul. Przy Kaszowniku" }
+  ];
+  let DATA = null;
+  let selectedId = 145;
+
+  const shortName = (n) => n.replace(/^Toruń,\s*/, "").replace(/^ul\.\s*/, "");
+  const fmtDay = (iso, opts) => new Date(iso + "T12:00:00").toLocaleDateString("pl-PL", opts);
+  const dni = (n) => n === 1 ? "dzień" : "dni";
+
+  function buildStations() {
+    const list = (DATA && DATA.stations) || STATIONS;
+    let saved = null;
+    try { saved = Number(localStorage.getItem("stacja")); } catch (e) {}
+    if (list.some(s => s.station_id === saved)) selectedId = saved;
+    const box = $("stationBtns");
+    box.innerHTML = "";
+    list.forEach(st => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "pill"; b.dataset.id = st.station_id;
+      b.textContent = shortName(st.station);
+      b.addEventListener("click", () => {
+        selectedId = st.station_id;
+        try { localStorage.setItem("stacja", String(selectedId)); } catch (e) {}
+        show();
+      });
+      box.appendChild(b);
+    });
+    show();
+  }
+
+  function show() {
+    document.querySelectorAll("#stationBtns .pill").forEach(b =>
+      b.setAttribute("aria-pressed", String(Number(b.dataset.id) === selectedId)));
+    const st = DATA && DATA.stations.find(s => s.station_id === selectedId);
+    const series = st && st.pm10;
+    const known = (series || []).filter(p => p.value !== null);
+    if (!known.length) {
+      $("big").textContent = "Brak danych"; $("big").className = "big";
+      $("bigLabel").textContent = "Dla tej stacji nie ma jeszcze danych z ostatnich 30 dni.";
+      $("worst").textContent = ""; $("chart").innerHTML = ""; $("detail").textContent = "";
+      return;
+    }
+    const norm = DATA.norm_pm10 || 50;
+    const over = known.filter(p => p.value > norm);
+    $("big").textContent = `${over.length} ${dni(over.length)}`;
+    $("big").className = "big " + (over.length ? "bad" : "good");
+    $("bigLabel").textContent = over.length
+      ? `z przekroczoną normą (na ${known.length} dni z danymi)`
+      : `bez przekroczenia normy (na ${known.length} dni z danymi)`;
+    const worst = known.reduce((a, b) => (b.value > a.value ? b : a));
+    $("worst").textContent = `Najgorzej: ${fmtDay(worst.date, { day: "numeric", month: "long" })} – ${worst.value.toLocaleString("pl-PL")} µg/m³`;
+    $("detail").textContent = "Dotknij słupka, żeby zobaczyć dzień.";
+    drawChart(series, norm);
+  }
+
+  function drawChart(series, norm) {
+    const W = 360, H = 200, padL = 30, padR = 6, padT = 12, padB = 26;
+    const maxV = Math.max(norm * 1.4, ...series.map(p => p.value || 0)) * 1.05;
+    const step = Math.ceil(maxV / 4 / 10) * 10;
+    const top = step * 4;
+    const y = (v) => padT + (H - padT - padB) * (1 - v / top);
+    const slot = (W - padL - padR) / series.length;
+    const bw = Math.max(3, slot * 0.68);
+
+    let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Wykres słupkowy średnich dobowych PM10 z ostatnich 30 dni">`;
+    for (let v = 0; v <= top; v += step) {
+      svg += `<line x1="${padL}" x2="${W - padR}" y1="${y(v)}" y2="${y(v)}" stroke="#E6E6E6" stroke-width="1"/>`;
+      svg += `<text x="${padL - 6}" y="${y(v) + 4}" font-size="10" text-anchor="end" fill="#111">${v}</text>`;
+    }
+    series.forEach((p, i) => {
+      const x = padL + i * slot + (slot - bw) / 2;
+      const label = fmtDay(p.date, { day: "numeric", month: "long" });
+      if (p.value === null) {
+        svg += `<rect x="${x}" y="${y(0) - 3}" width="${bw}" height="3" rx="1" fill="#C8C8C8"><title>${label}: brak pełnych danych</title></rect>`;
+      } else {
+        const c = p.value > norm ? "var(--bad)" : "var(--good)";
+        const h = Math.max(1, y(0) - y(p.value));
+        svg += `<rect class="bar" tabindex="0" data-i="${i}" x="${x}" y="${y(0) - h}" width="${bw}" height="${h}" rx="${Math.min(3, bw / 2)}" fill="${c}"><title>${label}: ${p.value} µg/m³</title></rect>`;
+      }
+      if (i % 7 === 0 || (i === series.length - 1 && i % 7 >= 4)) {
+        svg += `<text x="${x + bw / 2}" y="${H - 8}" font-size="10" text-anchor="middle" fill="#111">${fmtDay(p.date, { day: "numeric", month: "short" })}</text>`;
+      }
+    });
+    svg += `<line x1="${padL}" x2="${W - padR}" y1="${y(norm)}" y2="${y(norm)}" stroke="#111" stroke-width="1.5" stroke-dasharray="5 4"/>`;
+    svg += `<rect x="${W - padR - 52}" y="${y(norm) - 17}" width="52" height="14" rx="3" fill="#fff"/>`;
+    svg += `<text x="${W - padR - 3}" y="${y(norm) - 6}" font-size="10" font-weight="700" text-anchor="end" fill="#111">norma ${norm}</text>`;
+    svg += `</svg>`;
+    $("chart").innerHTML = svg;
+
+    $("chart").querySelectorAll("rect.bar").forEach(r => {
+      const pick = () => {
+        const p = series[Number(r.dataset.i)];
+        const word = p.value > norm ? "powyżej normy" : "w normie";
+        $("detail").textContent = `${fmtDay(p.date, { weekday: "long", day: "numeric", month: "long" })}: ${p.value.toLocaleString("pl-PL")} µg/m³ – ${word}`;
+      };
+      r.addEventListener("click", pick);
+      r.addEventListener("focus", pick);
+    });
+  }
+
+  fetch("data/last30.json", { cache: "no-store" })
+    .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+    .then(d => { if (d.stations) DATA = d; })
+    .catch(() => {})
+    .finally(buildStations);
+</script>
+</body>
+</html>
