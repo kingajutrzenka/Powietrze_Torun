@@ -1,28 +1,88 @@
-import requests, pandas as pd, time
+"""
+Pobiera bieżący indeks jakości powietrza GIOŚ dla stacji w Toruniu
+i zapisuje go do data/now.json, który czyta strona (index.html).
+
+Źródło danych: Główny Inspektorat Ochrony Środowiska (GIOŚ),
+API: https://api.gios.gov.pl/pjp-api/v1/rest
+"""
+
+import json
+import sys
+from datetime import datetime
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+import requests
 
 BASE = "https://api.gios.gov.pl/pjp-api/v1/rest"
+TZ = ZoneInfo("Europe/Warsaw")
+OUT = Path("data/now.json")
 
-def get(path, **params):
-    r = requests.get(f"{BASE}/{path}", params=params, timeout=30)
+STACJE = {
+    145: "Toruń, ul. Wały gen. Sikorskiego",
+    206: "Toruń, ul. Dziewulskiego",
+    208: "Toruń, ul. Przy Kaszowniku",
+}
+
+
+def pole(slownik, poczatek):
+    """Zwraca wartość pierwszego klucza zaczynającego się od `poczatek`.
+    GIOŚ ma długie, czasem ucięte nazwy kluczy, więc nie polegamy na pełnej nazwie."""
+    for k, v in slownik.items():
+        if k.startswith(poczatek):
+            return v
+    return None
+
+
+def indeks_stacji(sid):
+    r = requests.get(f"{BASE}/aqindex/getIndex/{sid}", timeout=30)
     r.raise_for_status()
-    return r.json()
+    aq = r.json()["AqIndex"]
+    wartosc = aq.get("Wartość indeksu")
+    if wartosc is None or not (0 <= int(wartosc) <= 5):
+        wartosc = None  # brak indeksu (np. awaria stacji) – strona pokaże "Brak danych"
+    czas = pole(aq, "Data danych źródłowych, z których policzono wartość indeksu dla wskaźnika st")
+    if czas:
+        czas = datetime.strptime(czas, "%Y-%m-%d %H:%M:%S").replace(tzinfo=TZ).isoformat()
+    return {
+        "station_id": sid,
+        "station": STACJE[sid],
+        "level": None if wartosc is None else int(wartosc),
+        "category": aq.get("Nazwa kategorii indeksu") if wartosc is not None else None,
+        "measured_at": czas,
+    }
 
-# Stacje Toruń
-stacje = pd.DataFrame(get("station/findAll", size=500)["Lista stacji pomiarowych"])
-torun = stacje[stacje["Nazwa miasta"] == "Toruń"]
-print(torun[["Identyfikator stacji", "Nazwa stacji"]])
 
-# Indeks
-for sid in torun["Identyfikator stacji"]:
-    idx = get(f"aqindex/getIndex/{sid}")["AqIndex"]
-    print(sid, idx["Wartość indeksu"], idx["Nazwa kategorii indeksu"])
+def main():
+    wyniki = []
+    for sid in STACJE:
+        try:
+            wyniki.append(indeks_stacji(sid))
+        except (requests.RequestException, KeyError, ValueError) as e:
+            print(f"Stacja {sid}: błąd – {e}", file=sys.stderr)
+            wyniki.append({"station_id": sid, "station": STACJE[sid], "level": None,
+                           "category": None, "measured_at": None})
 
-# Stanowiska pomiarowe
-stanowiska = []
-for sid in torun["Identyfikator stacji"]:
-    stanowiska += get(f"station/sensors/{sid}")["Lista stanowisk pomiarowych dla podanej stacji"]
-    time.sleep(31)
+    poprawne = [w for w in wyniki if w["level"] is not None]
+    if not poprawne:
+        # nie nadpisujemy poprzedniego pliku pustymi danymi
+        print("Brak danych z żadnej stacji – zostawiam poprzedni now.json", file=sys.stderr)
+        sys.exit(1)
 
-stanowiska = pd.DataFrame(stanowiska)
-pyl = stanowiska[stanowiska["Wskaźnik - kod"].isin(["PM10", "PM2.5"])]
-print(pyl[["Identyfikator stacji", "Identyfikator stanowiska", "Wskaźnik - kod"]])
+    # domyślny widok na stronie: najgorsza stacja (użytkownik może wybrać inną)
+    glowny = max(poprawne, key=lambda w: w["level"])
+
+    dane = {
+        **glowny,
+        "updated_at": datetime.now(TZ).isoformat(timespec="seconds"),
+        "stations": wyniki,
+        "source": "GIOŚ – Główny Inspektorat Ochrony Środowiska",
+    }
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(dane, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"Zapisano {OUT}: poziom {dane['level']} ({dane['category']}), {dane['station']}")
+
+
+if __name__ == "__main__":
+    main()
