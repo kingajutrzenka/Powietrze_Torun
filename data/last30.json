@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-10T21:09:29+01:00",
+  "updated_at": "2026-11-10T21:16:25+01:00",
   "norm_pm10": 50,
   "min_hours": 18,
   "stations": [
@@ -21,99 +21,99 @@
         },
         {
           "date": "2026-10-14",
-          "value": null
+          "value": 9.4
         },
         {
           "date": "2026-10-15",
-          "value": null
+          "value": 16.2
         },
         {
           "date": "2026-10-16",
-          "value": null
+          "value": 26.4
         },
         {
           "date": "2026-10-17",
-          "value": null
+          "value": 25.5
         },
         {
           "date": "2026-10-18",
-          "value": null
+          "value": 26.2
         },
         {
           "date": "2026-10-19",
-          "value": null
+          "value": 6.1
         },
         {
           "date": "2026-10-20",
-          "value": null
+          "value": 13.5
         },
         {
           "date": "2026-10-21",
-          "value": null
+          "value": 14.3
         },
         {
           "date": "2026-10-22",
-          "value": null
+          "value": 13.7
         },
         {
           "date": "2026-10-23",
-          "value": null
+          "value": 16.1
         },
         {
           "date": "2026-10-24",
-          "value": null
+          "value": 12.3
         },
         {
           "date": "2026-10-25",
-          "value": null
+          "value": 11.7
         },
         {
           "date": "2026-10-26",
-          "value": null
+          "value": 19.2
         },
         {
           "date": "2026-10-27",
-          "value": null
+          "value": 29.2
         },
         {
           "date": "2026-10-28",
-          "value": null
+          "value": 41.7
         },
         {
           "date": "2026-10-29",
-          "value": null
+          "value": 35.1
         },
         {
           "date": "2026-10-30",
-          "value": null
+          "value": 23.7
         },
         {
           "date": "2026-10-31",
-          "value": null
+          "value": 11.1
         },
         {
           "date": "2026-11-01",
-          "value": null
+          "value": 11.9
         },
         {
           "date": "2026-11-02",
-          "value": null
+          "value": 26.5
         },
         {
           "date": "2026-11-03",
-          "value": null
+          "value": 17.4
         },
         {
           "date": "2026-11-04",
-          "value": null
+          "value": 23.6
         },
         {
           "date": "2026-11-05",
-          "value": null
+          "value": 24.0
         },
         {
           "date": "2026-11-06",
-          "value": null
+          "value": 24.3
         },
         {
           "date": "2026-11-07",
@@ -136,111 +136,111 @@
       "pm10": [
         {
           "date": "2026-10-11",
-          "value": null
+          "value": 10.0
         },
         {
           "date": "2026-10-12",
-          "value": null
+          "value": 6.0
         },
         {
           "date": "2026-10-13",
-          "value": null
+          "value": 5.8
         },
         {
           "date": "2026-10-14",
-          "value": null
+          "value": 12.2
         },
         {
           "date": "2026-10-15",
-          "value": null
+          "value": 18.2
         },
         {
           "date": "2026-10-16",
-          "value": null
+          "value": 26.2
         },
         {
           "date": "2026-10-17",
-          "value": null
+          "value": 22.9
         },
         {
           "date": "2026-10-18",
-          "value": null
+          "value": 23.0
         },
         {
           "date": "2026-10-19",
-          "value": null
+          "value": 9.6
         },
         {
           "date": "2026-10-20",
-          "value": null
+          "value": 7.2
         },
         {
           "date": "2026-10-21",
-          "value": null
+          "value": 15.3
         },
         {
           "date": "2026-10-22",
-          "value": null
+          "value": 14.1
         },
         {
           "date": "2026-10-23",
-          "value": null
+          "value": 14.7
         },
         {
           "date": "2026-10-24",
-          "value": null
+          "value": 11.1
         },
         {
           "date": "2026-10-25",
-          "value": null
+          "value": 11.9
         },
         {
           "date": "2026-10-26",
-          "value": null
+          "value": 15.7
         },
         {
           "date": "2026-10-27",
-          "value": null
+          "value": 25.0
         },
         {
           "date": "2026-10-28",
-          "value": null
+          "value": 29.7
         },
         {
           "date": "2026-10-29",
-          "value": null
+          "value": 31.2
         },
         {
           "date": "2026-10-30",
-          "value": null
+          "value": 20.8
         },
         {
           "date": "2026-10-31",
-          "value": null
+          "value": 9.4
         },
         {
           "date": "2026-11-01",
-          "value": null
+          "value": 9.9
         },
         {
           "date": "2026-11-02",
-          "value": null
+          "value": 24.4
         },
         {
           "date": "2026-11-03",
-          "value": null
+          "value": 15.3
         },
         {
           "date": "2026-11-04",
-          "value": null
+          "value": 17.3
         },
         {
           "date": "2026-11-05",
-          "value": null
+          "value": 27.8
         },
         {
           "date": "2026-11-06",
-          "value": null
+          "value": 25.5
         },
         {
           "date": "2026-11-07",
@@ -253,133 +253,6 @@
         {
           "date": "2026-11-09",
           "value": 87.3
-        }
-      ],
-      "pm25": null
-    },
-    {
-      "station_id": 208,
-      "station": "Toruń, ul. Przy Kaszowniku",
-      "pm10": [
-        {
-          "date": "2026-10-11",
-          "value": null
-        },
-        {
-          "date": "2026-10-12",
-          "value": null
-        },
-        {
-          "date": "2026-10-13",
-          "value": null
-        },
-        {
-          "date": "2026-10-14",
-          "value": null
-        },
-        {
-          "date": "2026-10-15",
-          "value": null
-        },
-        {
-          "date": "2026-10-16",
-          "value": null
-        },
-        {
-          "date": "2026-10-17",
-          "value": null
-        },
-        {
-          "date": "2026-10-18",
-          "value": null
-        },
-        {
-          "date": "2026-10-19",
-          "value": null
-        },
-        {
-          "date": "2026-10-20",
-          "value": null
-        },
-        {
-          "date": "2026-10-21",
-          "value": null
-        },
-        {
-          "date": "2026-10-22",
-          "value": null
-        },
-        {
-          "date": "2026-10-23",
-          "value": null
-        },
-        {
-          "date": "2026-10-24",
-          "value": null
-        },
-        {
-          "date": "2026-10-25",
-          "value": null
-        },
-        {
-          "date": "2026-10-26",
-          "value": null
-        },
-        {
-          "date": "2026-10-27",
-          "value": null
-        },
-        {
-          "date": "2026-10-28",
-          "value": null
-        },
-        {
-          "date": "2026-10-29",
-          "value": null
-        },
-        {
-          "date": "2026-10-30",
-          "value": null
-        },
-        {
-          "date": "2026-10-31",
-          "value": null
-        },
-        {
-          "date": "2026-11-01",
-          "value": null
-        },
-        {
-          "date": "2026-11-02",
-          "value": null
-        },
-        {
-          "date": "2026-11-03",
-          "value": null
-        },
-        {
-          "date": "2026-11-04",
-          "value": null
-        },
-        {
-          "date": "2026-11-05",
-          "value": null
-        },
-        {
-          "date": "2026-11-06",
-          "value": null
-        },
-        {
-          "date": "2026-11-07",
-          "value": 39.6
-        },
-        {
-          "date": "2026-11-08",
-          "value": 51.0
-        },
-        {
-          "date": "2026-11-09",
-          "value": 80.7
         }
       ],
       "pm25": [
@@ -490,6 +363,254 @@
         {
           "date": "2026-11-06",
           "value": null
+        },
+        {
+          "date": "2026-11-07",
+          "value": null
+        },
+        {
+          "date": "2026-11-08",
+          "value": null
+        },
+        {
+          "date": "2026-11-09",
+          "value": null
+        }
+      ]
+    },
+    {
+      "station_id": 208,
+      "station": "Toruń, ul. Przy Kaszowniku",
+      "pm10": [
+        {
+          "date": "2026-10-11",
+          "value": 12.1
+        },
+        {
+          "date": "2026-10-12",
+          "value": 8.0
+        },
+        {
+          "date": "2026-10-13",
+          "value": 8.9
+        },
+        {
+          "date": "2026-10-14",
+          "value": 13.1
+        },
+        {
+          "date": "2026-10-15",
+          "value": 15.5
+        },
+        {
+          "date": "2026-10-16",
+          "value": 23.3
+        },
+        {
+          "date": "2026-10-17",
+          "value": 24.7
+        },
+        {
+          "date": "2026-10-18",
+          "value": 24.1
+        },
+        {
+          "date": "2026-10-19",
+          "value": 11.5
+        },
+        {
+          "date": "2026-10-20",
+          "value": 13.9
+        },
+        {
+          "date": "2026-10-21",
+          "value": 18.4
+        },
+        {
+          "date": "2026-10-22",
+          "value": 16.3
+        },
+        {
+          "date": "2026-10-23",
+          "value": 17.8
+        },
+        {
+          "date": "2026-10-24",
+          "value": 12.7
+        },
+        {
+          "date": "2026-10-25",
+          "value": 12.8
+        },
+        {
+          "date": "2026-10-26",
+          "value": 15.9
+        },
+        {
+          "date": "2026-10-27",
+          "value": 23.8
+        },
+        {
+          "date": "2026-10-28",
+          "value": 31.2
+        },
+        {
+          "date": "2026-10-29",
+          "value": 28.3
+        },
+        {
+          "date": "2026-10-30",
+          "value": 19.3
+        },
+        {
+          "date": "2026-10-31",
+          "value": 10.8
+        },
+        {
+          "date": "2026-11-01",
+          "value": 13.9
+        },
+        {
+          "date": "2026-11-02",
+          "value": 28.6
+        },
+        {
+          "date": "2026-11-03",
+          "value": 18.2
+        },
+        {
+          "date": "2026-11-04",
+          "value": 22.9
+        },
+        {
+          "date": "2026-11-05",
+          "value": 26.9
+        },
+        {
+          "date": "2026-11-06",
+          "value": 26.3
+        },
+        {
+          "date": "2026-11-07",
+          "value": 39.6
+        },
+        {
+          "date": "2026-11-08",
+          "value": 51.0
+        },
+        {
+          "date": "2026-11-09",
+          "value": 80.7
+        }
+      ],
+      "pm25": [
+        {
+          "date": "2026-10-11",
+          "value": 10.1
+        },
+        {
+          "date": "2026-10-12",
+          "value": 6.5
+        },
+        {
+          "date": "2026-10-13",
+          "value": 6.9
+        },
+        {
+          "date": "2026-10-14",
+          "value": 10.4
+        },
+        {
+          "date": "2026-10-15",
+          "value": 10.6
+        },
+        {
+          "date": "2026-10-16",
+          "value": 17.9
+        },
+        {
+          "date": "2026-10-17",
+          "value": 20.6
+        },
+        {
+          "date": "2026-10-18",
+          "value": 21.6
+        },
+        {
+          "date": "2026-10-19",
+          "value": 8.2
+        },
+        {
+          "date": "2026-10-20",
+          "value": 11.7
+        },
+        {
+          "date": "2026-10-21",
+          "value": 14.5
+        },
+        {
+          "date": "2026-10-22",
+          "value": 13.4
+        },
+        {
+          "date": "2026-10-23",
+          "value": 13.2
+        },
+        {
+          "date": "2026-10-24",
+          "value": 9.8
+        },
+        {
+          "date": "2026-10-25",
+          "value": 10.0
+        },
+        {
+          "date": "2026-10-26",
+          "value": 11.2
+        },
+        {
+          "date": "2026-10-27",
+          "value": 19.6
+        },
+        {
+          "date": "2026-10-28",
+          "value": 27.0
+        },
+        {
+          "date": "2026-10-29",
+          "value": 23.5
+        },
+        {
+          "date": "2026-10-30",
+          "value": 15.7
+        },
+        {
+          "date": "2026-10-31",
+          "value": 9.1
+        },
+        {
+          "date": "2026-11-01",
+          "value": 11.3
+        },
+        {
+          "date": "2026-11-02",
+          "value": 24.1
+        },
+        {
+          "date": "2026-11-03",
+          "value": 15.2
+        },
+        {
+          "date": "2026-11-04",
+          "value": 17.1
+        },
+        {
+          "date": "2026-11-05",
+          "value": 21.7
+        },
+        {
+          "date": "2026-11-06",
+          "value": 18.7
         },
         {
           "date": "2026-11-07",
