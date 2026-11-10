@@ -1,31 +1,31 @@
 {
-  "station_id": 208,
-  "station": "Toruń, ul. Przy Kaszowniku",
-  "level": 4,
-  "category": "Zły",
-  "measured_at": "2026-11-09T22:00:00+01:00",
-  "updated_at": "2026-11-09T22:27:30+01:00",
+  "station_id": 206,
+  "station": "Toruń, ul. Dziewulskiego",
+  "level": 3,
+  "category": "Dostateczny",
+  "measured_at": "2026-11-10T04:00:00+01:00",
+  "updated_at": "2026-11-10T05:08:25+01:00",
   "stations": [
     {
       "station_id": 145,
       "station": "Toruń, ul. Wały gen. Sikorskiego",
       "level": 2,
       "category": "Umiarkowany",
-      "measured_at": "2026-11-09T22:00:00+01:00"
+      "measured_at": "2026-11-10T04:00:00+01:00"
     },
     {
       "station_id": 206,
       "station": "Toruń, ul. Dziewulskiego",
-      "level": 2,
-      "category": "Umiarkowany",
-      "measured_at": "2026-11-09T22:00:00+01:00"
+      "level": 3,
+      "category": "Dostateczny",
+      "measured_at": "2026-11-10T04:00:00+01:00"
     },
     {
       "station_id": 208,
       "station": "Toruń, ul. Przy Kaszowniku",
-      "level": 4,
-      "category": "Zły",
-      "measured_at": "2026-11-09T22:00:00+01:00"
+      "level": 3,
+      "category": "Dostateczny",
+      "measured_at": "2026-11-10T04:00:00+01:00"
     }
   ],
   "source": "GIOŚ – Główny Inspektorat Ochrony Środowiska"
