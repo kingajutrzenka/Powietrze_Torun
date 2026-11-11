@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-10T21:29:42+01:00",
+  "updated_at": "2026-11-11T02:15:53+01:00",
   "norm_pm10": 50,
   "min_hours": 18,
   "stations": [
@@ -7,10 +7,6 @@
       "station_id": 145,
       "station": "Toruń, ul. Wały gen. Sikorskiego",
       "pm10": [
-        {
-          "date": "2026-10-11",
-          "value": null
-        },
         {
           "date": "2026-10-12",
           "value": null
@@ -126,6 +122,10 @@
         {
           "date": "2026-11-09",
           "value": 75.6
+        },
+        {
+          "date": "2026-11-10",
+          "value": 83.3
         }
       ],
       "pm25": null
@@ -134,10 +134,6 @@
       "station_id": 206,
       "station": "Toruń, ul. Dziewulskiego",
       "pm10": [
-        {
-          "date": "2026-10-11",
-          "value": 10.0
-        },
         {
           "date": "2026-10-12",
           "value": 6.0
@@ -253,13 +249,13 @@
         {
           "date": "2026-11-09",
           "value": 87.3
+        },
+        {
+          "date": "2026-11-10",
+          "value": 90.0
         }
       ],
       "pm25": [
-        {
-          "date": "2026-10-11",
-          "value": null
-        },
         {
           "date": "2026-10-12",
           "value": null
@@ -375,6 +371,10 @@
         {
           "date": "2026-11-09",
           "value": null
+        },
+        {
+          "date": "2026-11-10",
+          "value": null
         }
       ]
     },
@@ -382,10 +382,6 @@
       "station_id": 208,
       "station": "Toruń, ul. Przy Kaszowniku",
       "pm10": [
-        {
-          "date": "2026-10-11",
-          "value": 12.1
-        },
         {
           "date": "2026-10-12",
           "value": 8.0
@@ -501,13 +497,13 @@
         {
           "date": "2026-11-09",
           "value": 80.7
+        },
+        {
+          "date": "2026-11-10",
+          "value": 88.5
         }
       ],
       "pm25": [
-        {
-          "date": "2026-10-11",
-          "value": 10.1
-        },
         {
           "date": "2026-10-12",
           "value": 6.5
@@ -623,6 +619,10 @@
         {
           "date": "2026-11-09",
           "value": 76.6
+        },
+        {
+          "date": "2026-11-10",
+          "value": 79.7
         }
       ]
     }
