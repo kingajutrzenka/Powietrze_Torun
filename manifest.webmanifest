@@ -1,6 +1,6 @@
 {
   "name": "Czym oddycha Toruń?",
-  "short_name": "Czym oddycha Toruń?",
+  "short_name": "Toruń oddycha",
   "description": "Aktualny stan powietrza w Toruniu – dane GIOŚ.",
   "lang": "pl",
   "start_url": "./",
