@@ -3,29 +3,29 @@
   "station": "Toruń, ul. Wały gen. Sikorskiego",
   "level": 0,
   "category": "Bardzo dobry",
-  "measured_at": "2026-11-13T10:00:00+01:00",
-  "updated_at": "2026-11-13T10:33:51+01:00",
+  "measured_at": "2026-11-13T18:00:00+01:00",
+  "updated_at": "2026-11-13T18:45:44+01:00",
   "stations": [
     {
       "station_id": 145,
       "station": "Toruń, ul. Wały gen. Sikorskiego",
       "level": 0,
       "category": "Bardzo dobry",
-      "measured_at": "2026-11-13T10:00:00+01:00"
+      "measured_at": "2026-11-13T18:00:00+01:00"
     },
     {
       "station_id": 206,
       "station": "Toruń, ul. Dziewulskiego",
       "level": 0,
       "category": "Bardzo dobry",
-      "measured_at": "2026-11-13T10:00:00+01:00"
+      "measured_at": "2026-11-13T18:00:00+01:00"
     },
     {
       "station_id": 208,
       "station": "Toruń, ul. Przy Kaszowniku",
       "level": 0,
       "category": "Bardzo dobry",
-      "measured_at": "2026-11-13T10:00:00+01:00"
+      "measured_at": "2026-11-13T18:00:00+01:00"
     }
   ],
   "source": "GIOŚ – Główny Inspektorat Ochrony Środowiska"
